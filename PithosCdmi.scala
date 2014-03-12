@@ -36,7 +36,7 @@
 package gr.grnet.cdmi.service
 
 import gr.grnet.cdmi.api.CdmiApi
-import gr.grnet.cdmi.model.{ContainerModel, CapabilityModel}
+import gr.grnet.cdmi.model.ContainerModel
 import gr.grnet.common.http.Result
 import gr.grnet.common.keymap.KeyMap
 import gr.grnet.pithosj.api.SingleServicePithosApi
