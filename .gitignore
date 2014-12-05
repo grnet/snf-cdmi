@@ -1,3 +1,7 @@
 /target/
 .idea/
 *.iml
+devdocs/
+devscripts/
+/package
+/package-and-run

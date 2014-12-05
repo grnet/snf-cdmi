@@ -48,10 +48,12 @@
   <!--Common project settings-->
   <properties>
     <scala.version>2.10.4</scala.version>
+    <asynchttp.version>1.7.3</asynchttp.version>
     <snfcommonj.version>0.3.0-SNAPSHOT</snfcommonj.version>
     <cdmispec.version>0.3.0-SNAPSHOT</cdmispec.version>
-    <snfpithosj.version>0.3.0-SNAPSHOT</snfpithosj.version>
-    <finagle.version>6.20.0</finagle.version>
+    <pithosj.version>0.3.0-SNAPSHOT</pithosj.version>
+    <jackson.version>2.4.3</jackson.version>
+    <finagle.version>6.22.0</finagle.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
   </properties>
@@ -78,13 +80,13 @@
     <dependency>
       <groupId>gr.grnet</groupId>
       <artifactId>pithosj</artifactId>
-      <version>${snfpithosj.version}</version>
+      <version>${pithosj.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.ning</groupId>
       <artifactId>async-http-client</artifactId>
-      <version>1.7.23</version>
+      <version>${asynchttp.version}</version>
       <exclusions>
         <exclusion>
           <artifactId>netty</artifactId>
@@ -96,25 +98,25 @@
     <dependency>
       <groupId>com.ckkloverdos</groupId>
       <artifactId>typedkey</artifactId>
-      <version>0.7.0</version>
+      <version>0.8.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>2.3.2</version>
+      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.3.2</version>
+      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-scala_2.10</artifactId>
-      <version>2.3.2</version>
+      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
@@ -191,6 +193,22 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <archive>
+            <index>true</index>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>gr.grnet.cdmi.service.StdCdmiPithosServer</mainClass>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+          </archive>
+        </configuration>
       </plugin>
 
       <!-- Make sure tests display failures at the console-->

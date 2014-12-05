@@ -30,7 +30,7 @@ import com.twitter.logging.{Level, Logging}
 import com.twitter.util.{Future, Promise, Return, Throw}
 import gr.grnet.cdmi.metadata.StorageSystemMetadata
 import gr.grnet.cdmi.model.{ContainerModel, Model, ObjectModel}
-import gr.grnet.common.http.{StdMediaType, StdHeader, TResult}
+import gr.grnet.common.http.{ChannelBufferRequestBody, StdHeader, StdMediaType, TResult}
 import gr.grnet.common.io.{Base64, CloseAnyway, DeleteAnyway}
 import gr.grnet.common.json.Json
 import gr.grnet.common.text.{NoTrailingSlash, ParentPath, RemovePrefix}
@@ -46,13 +46,33 @@ import scala.collection.immutable.Seq
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
-object pithosTimeout extends GlobalFlag[Long](1000L * 60L * 3L /* 3 min*/, "millis to wait for Pithos response")
-object pithosURL    extends GlobalFlag[String] ("https://pithos.okeanos.grnet.gr/object-store/v1", "Pithos service URL")
-object pithosUUID   extends GlobalFlag[String] ("", "Pithos (Astakos) UUID. Usually set for debugging")
-object pithosToken  extends GlobalFlag[String] ("", "Pithos (Astakos) Token. Set this only for debugging")
-object authURL      extends GlobalFlag[String] ("https://okeanos-occi2.hellasgrid.gr:5000/main", "auth proxy")
-object authRedirect extends GlobalFlag[Boolean](true, "Redirect to 'authURL' if token is not present (in an attempt to get one)")
-object tokensURL    extends GlobalFlag[String]("https://accounts.okeanos.grnet.gr/identity/v2.0/tokens", "Used to obtain UUID from token")
+object pithosTimeout extends GlobalFlag[Long](
+                              1000L * 60L * 3L /* 3 min*/,
+                              "millis to wait for Pithos response")
+
+object pithosURL     extends GlobalFlag[String](
+                              "https://pithos.okeanos.grnet.gr/object-store/v1",
+                              "Pithos service URL")
+
+object pithosUUID    extends GlobalFlag[String](
+                              "",
+                              "Pithos (Astakos) UUID. Usually set for debugging")
+
+object pithosToken   extends GlobalFlag[String](
+                              "",
+                              "Pithos (Astakos) Token. Set this only for debugging")
+
+object authURL       extends GlobalFlag[String](
+                              "https://okeanos-occi2.hellasgrid.gr:5000/main",
+                              "auth proxy")
+
+object authRedirect  extends GlobalFlag[Boolean](
+                              true,
+                              "Redirect to 'authURL' if token is not present (in an attempt to get one)")
+
+object tokensURL     extends GlobalFlag[String](
+                              "https://accounts.okeanos.grnet.gr/identity/v2.0/tokens",
+                              "Used to obtain UUID from token")
 
 /**
  * A Pithos-based implementation for the CDMI service
@@ -827,7 +847,8 @@ object StdCdmiPithosServer extends CdmiRestService
     val serviceInfo = getPithosServiceInfo(request)
     val (container, path) = splitPithosContainerAndPath(objectPath)
 
-    val payload = request.getContent()
+    val content = request.getContent()
+    val payload = ChannelBufferRequestBody(content)
     val sf_result = pithos.putObject(serviceInfo, container, path, payload, contentType)
 
     completeToPromiseAndTransform(sf_result) {
