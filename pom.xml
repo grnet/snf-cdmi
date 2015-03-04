@@ -51,7 +51,7 @@
     <asynchttp.version>1.7.3</asynchttp.version>
     <snfcommonj.version>0.4.0</snfcommonj.version>
     <cdmispec.version>0.4.0</cdmispec.version>
-    <pithosj.version>0.3.0-SNAPSHOT</pithosj.version>
+    <pithosj.version>0.4.0</pithosj.version>
     <jackson.version>2.4.3</jackson.version>
     <finagle.version>6.24.1-MONOCACHE</finagle.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
