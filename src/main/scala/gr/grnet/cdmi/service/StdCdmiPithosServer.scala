@@ -84,11 +84,7 @@ object StdCdmiPithosServer extends CdmiRestService
   with CdmiRestServiceHandlers
   with CdmiRestServiceMethods
   with CdmiRestServiceResponse {
-
-  sealed trait PithosResult[+T]
-  final case class GoodPithosResult[T](value: T) extends PithosResult[T]
-  final case class BadPithosResult(status: Status, extraInfo: String = "") extends PithosResult[Nothing]
-
+  
   override def defaultLogLevel: Level = Level.DEBUG
 
   final val X_Pithos_Server_URL = "X-Pithos-Server-URL"
@@ -334,8 +330,6 @@ object StdCdmiPithosServer extends CdmiRestService
 
   override def flags: Seq[GlobalFlag[_]] = super.flags ++
     Seq(pithosTimeout, pithosServerURL, pithosRootPath, authURL, authRedirect, tokensURL)
-
-  def newResultPromise[T]: Promise[PithosResult[T]] = Promise[PithosResult[T]]()
 
   def fixPathFromContentType(path: String, contentType: String): String =
     contentType match {
