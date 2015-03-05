@@ -48,11 +48,10 @@
   <!--Common project settings-->
   <properties>
     <scala.version>2.11.4</scala.version>
-    <asynchttp.version>1.7.3</asynchttp.version>
     <snfcommonj.version>0.4.0</snfcommonj.version>
     <cdmispec.version>0.4.0</cdmispec.version>
     <pithosj.version>0.4.0</pithosj.version>
-    <jackson.version>2.4.3</jackson.version>
+    <jackson.version>2.5.1</jackson.version>
     <finagle.version>6.24.1-MONOCACHE</finagle.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
@@ -84,39 +83,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.ning</groupId>
-      <artifactId>async-http-client</artifactId>
-      <version>${asynchttp.version}</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>netty</artifactId>
-          <groupId>io.netty</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
       <groupId>com.ckkloverdos</groupId>
       <artifactId>typedkey</artifactId>
       <version>0.8.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-scala_2.11</artifactId>
-      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
