@@ -5,3 +5,4 @@ devdocs/
 devscripts/
 /package
 /package-and-run
+dependency-reduced-pom.xml
