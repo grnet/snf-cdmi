@@ -51,8 +51,8 @@
     <scala.version>${scala.main.version}.4</scala.version>
 
     <snfcommonj.version>0.4.0</snfcommonj.version>
-    <cdmispec.version>0.4.0</cdmispec.version>
-    <pithosj.version>0.4.0</pithosj.version>
+    <cdmispec.version>0.4.0-SNAPSHOT</cdmispec.version>
+    <pithosj.version>0.4.0-SNAPSHOT</pithosj.version>
 
     <jackson.version>2.5.1</jackson.version>
     <typedkey.version>0.9.0</typedkey.version>
@@ -190,6 +190,42 @@
           </archive>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <finalName>snf-cdmi-${project.version}</finalName>
+
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <manifestEntries>
+                    <Main-Class>${main.class}</Main-Class>
+                    <Version>${project.version}</Version>
+                    <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+                  </manifestEntries>
+                </transformer>
+
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"/>
+
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer">
+                  <addHeader>false</addHeader>
+                </transformer>
+
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
 
       <!-- Make sure tests display failures at the console-->
       <plugin>
