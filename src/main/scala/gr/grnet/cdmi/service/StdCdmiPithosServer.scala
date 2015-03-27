@@ -173,7 +173,7 @@ object StdCdmiPithosServer extends CdmiRestService
   }
 
   val authFilter = new Filter {
-    def authenticate(request: Request): Future[Response] = {
+    def authenticateResponse(request: Request): Response = {
       val response = request.response
       response.status = Status.Unauthorized
       val rh = response.headerMap
@@ -181,7 +181,7 @@ object StdCdmiPithosServer extends CdmiRestService
       rh.add(HeaderNames.WWW_Authenticate, wwwAuthenticateValue)
       rh.add(HeaderNames.Content_Length,   "0")
 
-      response.future
+      response
     }
 
     override def apply(request: Request, service: Service): Future[Response] = {
@@ -193,13 +193,16 @@ object StdCdmiPithosServer extends CdmiRestService
       getPithosToken(request) match {
         case null if authRedirect() ⇒
           log.warning(s"Unauthenticated ${request.method} ${request.uri}")
-          authenticate(request)
+          val response = authenticateResponse(request)
+          logEndRequest(request, response)
+          response.future
 
         case _ ⇒
           service(request)
       }
     }
   }
+
 
   final val postTokensJsonFmt = """{ "auth": { "token": { "id": "%s" } } }"""
 
@@ -209,15 +212,17 @@ object StdCdmiPithosServer extends CdmiRestService
       val jsonFmt = postTokensJsonFmt
       val token = getPithosToken(request)
       val jsonPayload = jsonFmt.format(token)
+      val url = tokensURL()
 
-      val httpClient = FinagleClientFactory.newClient(tokensURL())
+      val httpClient = FinagleClientFactory.newClientService(url)
 
       val postTokensRequest =
         RequestBuilder().
-          url(tokensURL()).
+          url(url).
           addHeader(StdHeader.Content_Type.headerName(), StdMediaType.Application_Json.value()).
           buildPost(Buf.ByteArray.Owned(jsonPayload.getBytes(StandardCharsets.UTF_8)))
 
+      log.ifDebug(s"[postTokens] ==> POST $url")
       httpClient(postTokensRequest)
     }
 
@@ -230,7 +235,8 @@ object StdCdmiPithosServer extends CdmiRestService
         case null if getPithosToken(request) ne null ⇒
           postTokens(request).transform {
             case Return(postTokensResponse) if postTokensResponse.statusCode == 200 ⇒
-              val jsonTree = Json.jsonStringToTree(postTokensResponse.contentString)
+              val responseString = postTokensResponse.contentString
+              val jsonTree = Json.jsonStringToTree(responseString)
 
               if(jsonTree.has("access")) {
                 val accessTree = jsonTree.get("access")
@@ -243,12 +249,13 @@ object StdCdmiPithosServer extends CdmiRestService
                       if(idTree.isTextual) {
                         val uuid = idTree.asText()
                         request.headerMap.add(X_Pithos_UUID, uuid)
-                        log.info(s"Derived $X_Pithos_UUID: $uuid")
+                        log.info(s"[postTokens] <== 200 Derived $X_Pithos_UUID: $uuid")
                       }
                     }
                   }
                 }
               }
+              else log.warning(s"[postTokens] <== 200 (unknown JSON)")
 
               getPithosUUID(request) match {
                 case null ⇒
@@ -267,7 +274,7 @@ object StdCdmiPithosServer extends CdmiRestService
               textPlain(request, postTokensResponse.status, postTokensResponse.contentString)
 
             case Throw(t) ⇒
-              log.error(s"Calling ${tokensURL()}")
+              log.error(s"ERROR calling ${tokensURL()}")
               internalServerError(request, t, PithosErrorRef.PIE009)
           }
 
@@ -388,12 +395,13 @@ object StdCdmiPithosServer extends CdmiRestService
     val serviceInfo = getPithosServiceInfo(request)
     val folderPath = containerPath mkString "/"
 
-    val checkResponseF = pithos(serviceInfo).checkExistsObject(serviceInfo, folderPath)
+    val pithosApi = pithos(serviceInfo)
+    val checkResponseF = pithosApi.checkExistsObject(serviceInfo, folderPath)
     checkResponseF.transform {
       case Return(checkResult) if checkResult.isSuccess ⇒
         val resultData = checkResult.successData.get
         if(resultData.isContainerOrDirectory) {
-          val listResponseF = pithos(serviceInfo).listObjectsInPath(serviceInfo, folderPath)
+          val listResponseF = pithosApi.listObjectsInPath(serviceInfo, folderPath)
           listResponseF.transform {
             case Return(listResult) if listResult.isSuccess ⇒
               val listObjectsInPath = listResult.successData.get.objects
@@ -630,8 +638,7 @@ object StdCdmiPithosServer extends CdmiRestService
       resultData.Content_Type  .foreach(response.contentType   = _)
       resultData.Content_Length.foreach(response.contentLength = _)
       response.headerMap.add(HeaderNames.X_CDMI_Specification_Version, currentCdmiVersion)
-
-      end(request, response).future
+      response.future
     }
   }
 
@@ -651,7 +658,7 @@ object StdCdmiPithosServer extends CdmiRestService
       try Json.jsonStringToTree(content)
       catch {
         case e: com.fasterxml.jackson.core.JsonParseException ⇒
-          log.error(e.toString)
+          log.error(s"Error parsing input as JSON: $e")
           return badRequest(
             request,
             PithosErrorRef.PBR008,
