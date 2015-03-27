@@ -93,6 +93,8 @@ object StdCdmiPithosServer extends CdmiRestService
   final val X_Pithos_Token      = "X-Pithos-Token"
   final val X_Auth_Token        = "X-Auth-Token"
 
+  final val wwwAuthenticateValue = s"Keystone uri='${authURL()}'"
+
   val pithosApiCache = CacheBuilder.
     newBuilder().
     maximumSize(50).
@@ -176,7 +178,7 @@ object StdCdmiPithosServer extends CdmiRestService
       response.status = Status.Unauthorized
       val rh = response.headerMap
       rh.add(HeaderNames.Content_Type,     MediaTypes.Text_Html)
-      rh.add(HeaderNames.WWW_Authenticate, s"Keystone uri='${authURL()}'")
+      rh.add(HeaderNames.WWW_Authenticate, wwwAuthenticateValue)
       rh.add(HeaderNames.Content_Length,   "0")
 
       response.future
