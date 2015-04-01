@@ -23,7 +23,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>gr.grnet</groupId>
   <artifactId>snf-cdmi</artifactId>
-  <version>0.4.0-SNAPSHOT</version>
+  <version>0.4.0</version>
 
   <!-- Project details-->
   <name>cdmi-spec</name>
@@ -51,8 +51,8 @@
     <scala.version>${scala.main.version}.4</scala.version>
 
     <snfcommonj.version>0.4.0</snfcommonj.version>
-    <cdmispec.version>0.4.0-SNAPSHOT</cdmispec.version>
-    <pithosj.version>0.4.0-SNAPSHOT</pithosj.version>
+    <cdmispec.version>0.4.0</cdmispec.version>
+    <pithosj.version>0.4.0</pithosj.version>
 
     <jackson.version>2.5.1</jackson.version>
     <typedkey.version>0.9.0</typedkey.version>
