@@ -23,7 +23,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>gr.grnet</groupId>
   <artifactId>snf-cdmi</artifactId>
-  <version>0.4.0</version>
+  <version>0.4.2</version>
 
   <!-- Project details-->
   <name>cdmi-spec</name>
@@ -48,17 +48,17 @@
   <!--Common project settings-->
   <properties>
     <scala.main.version>2.11</scala.main.version>
-    <scala.version>${scala.main.version}.4</scala.version>
+    <scala.version>${scala.main.version}.6</scala.version>
 
-    <snfcommonj.version>0.4.0</snfcommonj.version>
-    <cdmispec.version>0.4.0</cdmispec.version>
-    <pithosj.version>0.4.0</pithosj.version>
+    <snfcommonj.version>0.4.2</snfcommonj.version>
+    <cdmispec.version>0.4.2</cdmispec.version>
+    <pithosj.version>0.4.2</pithosj.version>
 
     <jackson.version>2.5.1</jackson.version>
     <typedkey.version>0.9.0</typedkey.version>
 
-    <finagle.version>6.24.1-MONOCACHE</finagle.version>
-    <twitter.util.version>6.23.0</twitter.util.version>
+    <finagle.version>6.25.0</finagle.version>
+    <twitter.util.version>6.24.0</twitter.util.version>
 
     <junit.version>4.12</junit.version>
 
