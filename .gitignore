@@ -7,3 +7,4 @@ devscripts/
 /package-and-run
 dependency-reduced-pom.xml
 __gitstats/
+.arcconfig
