@@ -26,7 +26,7 @@
   <version>0.4.3</version>
 
   <!-- Project details-->
-  <name>cdmi-spec</name>
+  <name>snf-cdmi</name>
   <description>
     CDMI/v1.0.2, v1.1 Server based on the Pithos+ storage backend
   </description>
