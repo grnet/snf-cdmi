@@ -1,15 +1,21 @@
 FROM maven:3.2-jdk-7
 
 RUN adduser --disabled-password --gecos '' snfcdmi
-USER snfcdmi
 
 ENV APPHOME /home/snfcdmi
 WORKDIR $APPHOME
-COPY pom.xml $APPHOME/
-RUN mvn dependency:resolve
-RUN mvn compile || true; mvn package || true
+ADD pom.xml $APPHOME/
+RUN chown -R snfcdmi:snfcdmi .
 
-COPY . $APPHOME/
+RUN ls -al
+RUN su -c 'mvn dependency:resolve' snfcdmi
+RUN su -c 'mvn compile || true; mvn package || true' snfcdmi
 
-CMD mvn -e install
+#USER snfcdmi
+ADD . $APPHOME/
+RUN chown -R snfcdmi:snfcdmi .
+RUN ls -al
+
+#ONBUILD su - snfcdmi
+CMD su -c 'ls -al; mvn -e --batch-mode install' snfcdmi
 
