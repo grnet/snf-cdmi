@@ -1,0 +1,15 @@
+FROM maven:3.2-jdk-7
+
+RUN adduser --disabled-password snfcdmi </dev/null
+USER snfcdmi
+
+ENV APPHOME /home/snfcdmi
+WORKDIR $APPHOME
+COPY pom.xml $APPHOME/
+RUN mvn dependency:resolve
+RUN mvn compile || true; mvn package || true
+
+COPY . $APPHOME/
+
+CMD mvn -e install
+
