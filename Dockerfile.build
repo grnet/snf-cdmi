@@ -1,6 +1,6 @@
 FROM maven:3.2-jdk-7
 
-RUN adduser --disabled-password snfcdmi </dev/null
+RUN adduser --disabled-password --gecos '' snfcdmi
 USER snfcdmi
 
 ENV APPHOME /home/snfcdmi
