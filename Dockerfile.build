@@ -9,11 +9,9 @@ RUN chown -R snfcdmi:snfcdmi .
 
 RUN ls -al
 RUN su -c 'mvn dependency:resolve' snfcdmi
-RUN su -c 'mvn compile || mvn package || true' snfcdmi
 
 ADD . $APPHOME/
-RUN chown -R snfcdmi:snfcdmi .
-RUN ls -al
+RUN chown -R snfcdmi:snfcdmi . && ls -al
 
-CMD su -c 'mvn -e --batch-mode package' snfcdmi
+CMD su -c 'mvn -e package' snfcdmi
 

@@ -11,7 +11,7 @@ IMAGE="snf-cdmi-build:${VERSION}"
 DOCKERFILE=Dockerfile.build
 
 # Make the master image with a lot of maven dependencies resolved
-docker build -t "${IMAGE}" -f "${DOCKERFILE}" "${HERE}"
+docker build --rm -t "${IMAGE}" -f "${DOCKERFILE}" "${HERE}"
 docker images | grep snf-cdmi-build
 
 # Ensure target/ exists
@@ -19,7 +19,7 @@ docker images | grep snf-cdmi-build
 [ -d "${TARGET}" ] && rm -rf "${TARGET}"
 mkdir -p "${TARGET}"
 
-docker run \
+docker run --rm \
     -e VERSION="${VERSION}" \
     -v "${TARGET}":/home/snfcdmi/target \
     "${IMAGE}"
