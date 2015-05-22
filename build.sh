@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 HERE="$(cd "$(dirname $0)" && pwd -P)"
 TARGET="${HERE}"/target
 VERSION=$(grep version pom.xml | grep -v -e '<\?xml\|~'| head -n 1 | sed 's/<version>//' | sed 's/<\/version>//'| awk '{print $1}')
@@ -10,18 +8,27 @@ JAR="${TARGET}/${JARNAME}"
 IMAGE="snf-cdmi-build:${VERSION}"
 DOCKERFILE=Dockerfile.build
 
-# Make the master image with a lot of maven dependencies resolved
-docker build --rm -t "${IMAGE}" -f "${DOCKERFILE}" "${HERE}"
-docker images | grep snf-cdmi-build
+function rm_image() {
+  docker rmi ${IMAGE}
+}
 
-# Ensure target/ exists
-
+# Ensure a clean target/ exists
 [ -d "${TARGET}" ] && rm -rf "${TARGET}"
 mkdir -p "${TARGET}"
 
-docker run --rm \
-    -e VERSION="${VERSION}" \
-    -v "${TARGET}":/home/snfcdmi/target \
-    "${IMAGE}"
+docker build --rm -t "${IMAGE}" -f "${DOCKERFILE}" "${HERE}"
+echo
+docker images | grep snf-cdmi-build
 
+echo
+docker run --rm \
+  -v $HOME/.m2:/home/snfcdmi/.m2 \
+  -v ${TARGET}:/home/snfcdmi/target \
+  ${IMAGE} && \
+rm_image && \
+echo && \
 echo ${JAR}
+
+STATUS=$?
+[ "${STATUS}" != "0" ] && rm_image
+exit ${STATUS}
