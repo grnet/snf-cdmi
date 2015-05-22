@@ -23,7 +23,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>gr.grnet</groupId>
   <artifactId>snf-cdmi</artifactId>
-  <version>0.4.3</version>
+  <version>0.4.4-SNAPSHOT</version>
 
   <!-- Project details-->
   <name>snf-cdmi</name>
@@ -65,6 +65,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
 
+    <artifact.name.nojar>snf-cdmi-${project.version}</artifact.name.nojar>
+    <artifact.name>${artifact.name.nojar}.jar</artifact.name>
     <main.class>gr.grnet.cdmi.service.StdCdmiPithosServer</main.class>
   </properties>
 
@@ -202,7 +204,7 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <finalName>snf-cdmi-${project.version}</finalName>
+              <finalName>${artifact.name.nojar}</finalName>
 
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
