@@ -1,0 +1,26 @@
+#!/bin/sh
+
+HERE=`dirname $0`
+NAME=snf-cdmi
+LOG=$HERE/$NAME.log
+VERSION=0.4.3
+SSLCERT=$HERE/cdmi-cert.pem
+SSLKEY=$HERE/cdmi-key.pem
+
+exec java -jar $HERE/$NAME-$VERSION.jar \
+-gr.grnet.cdmi.service.tolerateDoubleSlash=true \
+-gr.grnet.cdmi.service.dev=true \
+-gr.grnet.cdmi.service.pithosServerURL="https://pithos.okeanos.grnet.gr" \
+-gr.grnet.cdmi.service.pithosRootPath="/object-store/v1" \
+-gr.grnet.cdmi.service.tokensURL="https://accounts.okeanos.grnet.gr/identity/v2.0/tokens" \
+-gr.grnet.cdmi.service.authURL="https://okeanos-occi2.hellasgrid.gr:5000/main" \
+-gr.grnet.cdmi.service.authRedirect=true \
+-gr.grnet.cdmi.service.sslCertPath=$SSLCERT \
+-gr.grnet.cdmi.service.sslKeyPath=$SSLKEY \
+-gr.grnet.cdmi.service.sslPort=:443 \
+-log.append=true \
+-log.level=DEBUG \
+-log.output=$LOG \
+-log.rollPolicy=Daily \
+-log.rotateCount=30 \
+"$@" >> $LOG
