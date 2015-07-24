@@ -3,7 +3,7 @@
 HERE=`dirname $0`
 NAME=snf-cdmi
 LOG=$HERE/$NAME.log
-VERSION=0.4.0-SNAPSHOT
+VERSION=0.4.4
 SSLCERT=$HERE/cdmi-cert.pem
 SSLKEY=$HERE/cdmi-key.pem
 

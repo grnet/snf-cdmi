@@ -23,7 +23,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>gr.grnet</groupId>
   <artifactId>snf-cdmi</artifactId>
-  <version>0.4.4-SNAPSHOT</version>
+  <version>0.4.4</version>
 
   <!-- Project details-->
   <name>snf-cdmi</name>
