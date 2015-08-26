@@ -6,7 +6,7 @@ VERSION=$(grep version pom.xml | grep -v -e '<\?xml\|~'| head -n 1 | sed 's/<ver
 JARNAME=snf-cdmi-${VERSION}.jar
 JAR="${TARGET}/${JARNAME}"
 IMAGE="snf-cdmi-build:${VERSION}"
-DOCKERFILE=Dockerfile.build
+DOCKERFILE="${HERE}"/Dockerfile.build
 
 function rm_image() {
   docker rmi ${IMAGE}
