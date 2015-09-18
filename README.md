@@ -4,9 +4,19 @@
 
 
 ## Building
+### With docker
 Latest version `v0.4.4` features reproducible builds with Docker, which we assume you have already installed as a requirement (Docker version `1.5.0`, build `a8a31ef`).
 
 Just run [`build.sh`](./build.sh) and after it has finished successfully, the target jar will be placed in `./target/` outside the container.
+
+### Without docker
+This is a maven project, so just run
+
+```
+$ mvn package
+```
+
+and you will one jar in `./target/`.
 
 ## Running
 The produced JAR is self-contained, all library dependencies are provided build-in. 
