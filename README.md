@@ -28,3 +28,12 @@ For running in production environments, we support [`supervisord`](http://superv
 The server will also need the respective SSL certificate and key files. For these, we assume the names `cdmi-cert.pem` and `cdmi-key.pem`.
 
 All files (jar, start script, SSL-related) are expected by convention in the same folder; this is pre-configured to be `/root/snf-cdmi`, as is evident from the `supervisord` configuration file. The server produces rolling log files in the same folder.
+
+## Setting up a Debian-based server
+For a clean Debian 8 server, you need to install the following (`vim` is for convenience):
+
+```
+$ apt-get install -y vim
+$ apt-get install -y supervisor
+$ apt-get install -y openjdk-7-jdk
+```
